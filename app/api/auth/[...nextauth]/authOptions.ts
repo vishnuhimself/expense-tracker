@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
@@ -7,7 +7,18 @@ import bcrypt from "bcryptjs"
 
 const prisma = new PrismaClient()
 
-export default NextAuth({
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      name?: string | null
+      email?: string | null
+      image?: string | null
+    }
+  }
+}
+
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -69,4 +80,4 @@ export default NextAuth({
   pages: {
     signIn: "/auth/signin",
   },
-})
+}
