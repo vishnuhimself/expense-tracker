@@ -1,6 +1,5 @@
-'use client'
-
 import React from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChartPieIcon, LockClosedIcon, CurrencyDollarIcon, ChartBarIcon } from '@heroicons/react/24/outline';
@@ -45,6 +44,11 @@ const testimonials = [
 export default function Home() {
   return (
     <div className="bg-gray-900 text-white">
+      <Head>
+        <title>ExpenseTracker - Manage Your Finances with Ease</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <main>
         {/* Hero Section */}
         <section className="relative overflow-hidden">
@@ -139,7 +143,7 @@ export default function Home() {
                       <p className="text-gray-400">{testimonial.role}</p>
                     </div>
                   </div>
-                  <p className="text-gray-300 italic">&quot;{testimonial.quote}&quot;</p>
+                  <p className="text-gray-300 italic">"{testimonial.quote}"</p>
                 </motion.div>
               ))}
             </div>
@@ -160,7 +164,7 @@ export default function Home() {
 
       <footer className="bg-gray-800 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} ExpenseTracker. All rights reserved.</p>
+          <p>&copy; 2024 ExpenseTracker. All rights reserved.</p>
         </div>
       </footer>
     </div>
