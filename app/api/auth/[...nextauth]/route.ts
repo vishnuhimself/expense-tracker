@@ -46,6 +46,20 @@ export const authOptions: AuthOptions = {
       }
     })
   ],
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.id = token.sub!;
+      }
+      return session;
+    },
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
+    },
+  },
   pages: {
     signIn: '/auth/signin',
     error: '/auth/error',
