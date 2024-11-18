@@ -8,18 +8,18 @@ generator client {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  expenses      Expense[]
-  accounts      Account[]
-  sessions      Session[]
-  trialEnds     DateTime?
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String    @unique
+  emailVerified      DateTime?
+  image              String?
+  hashedPassword     String?   
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  expenses           Expense[]
+  accounts           Account[]
+  sessions           Session[]
+  trialEnds          DateTime?
   subscriptionStatus String?
 }
 
@@ -35,6 +35,8 @@ model Expense {
   updatedAt   DateTime @updatedAt
   userId      String
   user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId]) 
 }
 
 model Account {
