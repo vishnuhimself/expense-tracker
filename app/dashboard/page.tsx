@@ -1,101 +1,154 @@
 'use client'
 
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { Line } from "react-chartjs-2"
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js'
+import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { DatePickerWithRange } from "@/components/ui/date-range-picker"
+import { ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts"
+import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-)
+interface DashboardData {
+  expenses: any[]
+  expensesToday: number
+  expensesThisWeek: number
+  expensesThisMonth: number
+  mostSpentCategory: string
+  mostUsedPaymentMethod: string
+  categorySums: Record<string, number>
+}
 
-export default function Dashboard() {
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']
+
+export default function DashboardPage() {
   const { data: session, status } = useSession()
-  const router = useRouter()
-  const [expenses, setExpenses] = useState([])
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | undefined>(undefined)
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth/signin")
-    } else if (status === "authenticated") {
-      fetchExpenses()
-    }
-  }, [status, router])
+    const fetchDashboardData = async () => {
+      if (status === 'loading') return
+      if (status === 'unauthenticated') {
+        setError('You must be logged in to view this page')
+        setLoading(false)
+        return
+      }
 
-  const fetchExpenses = async () => {
-    try {
-      const response = await fetch('/api/expenses')
-      const data = await response.json()
-      setExpenses(data)
-      setLoading(false)
-    } catch (error) {
-      console.error('Error fetching expenses:', error)
-      setLoading(false)
-    }
-  }
+      try {
+        const queryParams = new URLSearchParams()
+        if (dateRange?.from) queryParams.append('startDate', dateRange.from.toISOString())
+        if (dateRange?.to) queryParams.append('endDate', dateRange.to.toISOString())
 
-  if (status === "loading" || loading) {
+        const response = await fetch(`/api/expenses?${queryParams}`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch dashboard data')
+        }
+        const data = await response.json()
+        setDashboardData(data)
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+        setError(errorMessage)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [dateRange, status])
+
+  if (loading) {
     return <div>Loading...</div>
   }
 
-  if (!session) {
-    return null
+  if (error) {
+    return <div>Error: {error}</div>
   }
 
-  const chartData = {
-    labels: expenses.map((expense: any) => new Date(expense.date).toLocaleDateString()),
-    datasets: [
-      {
-        label: 'Expenses',
-        data: expenses.map((expense: any) => expense.amount),
-        fill: false,
-        backgroundColor: 'rgb(75, 192, 192)',
-        borderColor: 'rgba(75, 192, 192, 0.2)',
-      },
-    ],
+  if (!dashboardData) {
+    return <div>No data available. Start tracking your expenses!</div>
   }
 
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Expense Trend',
-      },
-    },
-  }
+  const { expensesToday, expensesThisWeek, expensesThisMonth, mostSpentCategory, mostUsedPaymentMethod, categorySums } = dashboardData
+
+  const pieChartData = Object.entries(categorySums).map(([name, value]) => ({ name, value }))
 
   return (
-    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome to your dashboard, {session.user?.name}</h1>
-      <div className="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
-        <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg leading-6 font-medium text-gray-900">Expense Overview</h2>
-          <div className="mt-5">
-            <Line data={chartData} options={chartOptions} />
-          </div>
-        </div>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Welcome, {session?.user?.name}!</h1>
+      
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Expenses Today</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${expensesToday.toFixed(2)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Expenses This Week</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${expensesThisWeek.toFixed(2)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Expenses This Month</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${expensesThisMonth.toFixed(2)}</div>
+          </CardContent>
+        </Card>
       </div>
+
+      <Card className="mt-4">
+        <CardHeader>
+          <CardTitle>Expense Statistics</CardTitle>
+          <CardDescription>
+            {dateRange ? 
+              `From ${dateRange.from.toLocaleDateString()} to ${dateRange.to.toLocaleDateString()}` : 
+              "Current Month"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-between mb-4">
+            <div>
+              <p className="text-sm font-medium">Most Spent Category</p>
+              <p className="text-2xl font-bold">{mostSpentCategory}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Most Used Payment Method</p>
+              <p className="text-2xl font-bold">{mostUsedPaymentMethod}</p>
+            </div>
+          </div>
+          <DatePickerWithRange setDateRange={setDateRange} />
+          <div className="mt-4 h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieChartData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieChartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Legend />
+                <ChartTooltip content={<ChartTooltipContent />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -1,213 +1,319 @@
 'use client'
 
-import React from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { PieChartIcon as ChartPie, LockKeyhole, DollarSign, BarChart3 } from 'lucide-react';
+import React from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { Button } from "@/components/ui/button"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { BarChart3, LineChart, CreditCard } from 'lucide-react'
 
 const features = [
-  { name: 'Expense Tracking', description: 'Easily log and categorize your expenses', icon: DollarSign },
-  { name: 'Visual Analytics', description: 'Gain insights with beautiful charts and graphs', icon: ChartPie },
-  { name: 'Secure Payments', description: 'Your financial data is always protected', icon: LockKeyhole },
-  { name: 'Budget Forecasting', description: 'Plan ahead with our AI-powered predictions', icon: BarChart3 },
-];
+  {
+    title: "Easy Track Expenses",
+    description: "Efficiently monitor your spending and track financial engagement with intuitive analytics.",
+    icon: BarChart3,
+    image: "/placeholder.svg?height=400&width=600"
+  },
+  {
+    title: "Real-time Analytics",
+    description: "Track expenses and make data-driven decisions faster with our powerful analytics tools.",
+    icon: LineChart,
+    image: "/placeholder.svg?height=400&width=600"
+  },
+  {
+    title: "Monitor Budget",
+    description: "Keep a detailed log of all your financial transactions and interactions in one place.",
+    icon: CreditCard,
+    image: "/placeholder.svg?height=400&width=600"
+  }
+]
 
 const faqs = [
   {
-    question: "How does the 7-day free trial work?",
-    answer: "You get full access to all features for 7 days. No credit card required. Cancel anytime."
+    question: "Can I customize my expense categories?",
+    answer: "Yes, you can fully customize your expense categories and create new ones to match your specific needs."
+  },
+  {
+    question: "Is there a free trial available?",
+    answer: "Yes, we offer a 7-day free trial with full access to all features. No credit card required."
+  },
+  {
+    question: "How secure is my financial data?",
+    answer: "We use bank-level encryption and security measures to ensure your data is always protected and private."
   },
   {
     question: "Can I export my expense data?",
-    answer: "Yes, you can export your data in CSV or PDF format at any time."
-  },
-  {
-    question: "Is my financial information secure?",
-    answer: "We use bank-level encryption to ensure your data is always protected."
-  },
-];
-
-const testimonials = [
-  {
-    name: "Alex Johnson",
-    role: "Small Business Owner",
-    image: "https://randomuser.me/api/portraits/men/1.jpg",
-    quote: "This app has revolutionized how I track my business expenses. Highly recommended!"
-  },
-  {
-    name: "Sarah Lee",
-    role: "Freelance Designer",
-    image: "https://randomuser.me/api/portraits/women/2.jpg",
-    quote: "The visual analytics help me understand my spending patterns like never before."
-  },
-];
+    answer: "Yes, you can export your data in multiple formats including CSV, PDF, and Excel at any time."
+  }
+]
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-sm">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex-shrink-0">
-              <Link href="/" className="text-xl font-bold">
-                ExpenseTracker
-              </Link>
-            </div>
-            <div className="flex gap-4">
-              <Link 
-                href="/auth/signin" 
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white hover:bg-gray-700"
-              >
-                Sign in
-              </Link>
-              <Link 
-                href="/auth/signup" 
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              >
-                Sign up
-              </Link>
-            </div>
+    <div className="min-h-screen bg-background">
+      <header className="fixed top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
+        <nav className="container h-14 flex items-center justify-between">
+          <Link href="/" className="font-semibold text-lg">
+            ExpenseTracker
+          </Link>
+          
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="#features" className="text-sm font-medium text-muted-foreground hover:text-primary">
+              Features
+            </Link>
+            <Link href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-primary">
+              Pricing
+            </Link>
+            <Link href="#faq" className="text-sm font-medium text-muted-foreground hover:text-primary">
+              FAQ
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Link href="/auth/signin">
+              <Button variant="ghost" size="sm">Sign in</Button>
+            </Link>
+            <Link href="/auth/signup">
+              <Button size="sm">Get Started</Button>
+            </Link>
           </div>
         </nav>
       </header>
 
-      <main className="pt-16">
+      <main className="pt-20">
         {/* Hero Section */}
-        <section className="relative min-h-[80vh] flex items-center overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 animate-pulse" />
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-            <motion.h1 
-              className="text-5xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              Master Your Finances with ExpenseTracker
-            </motion.h1>
-            <motion.p 
-              className="text-xl md:text-2xl mb-10 text-gray-300"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Intelligent expense tracking and budgeting for the modern era
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <Link 
-                href="/auth/signup" 
-                className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 md:text-lg"
-              >
-                Start Free Trial
-              </Link>
-              <Link 
-                href="#features" 
-                className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-blue-400 bg-blue-900/20 hover:bg-blue-900/30 md:text-lg"
-              >
-                Learn More
-              </Link>
-            </motion.div>
-          </div>
+        <section className="container py-24 space-y-8">
+          <motion.div 
+            className="max-w-3xl mx-auto text-center space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl">
+              Streamline Your
+              <span className="block text-primary">Financial Management</span>
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              The all-in-one platform that empowers individuals to track, manage, and grow their finances seamlessly.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Link href="/auth/signup">
+              <Button size="lg">Start Free Trial</Button>
+            </Link>
+            <Link href="#features">
+              <Button size="lg" variant="outline">Learn More</Button>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            className="pt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <div className="flex justify-center gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="relative w-40 h-8">
+                    <div className="w-full h-full bg-muted rounded-md animate-pulse" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-20 bg-gray-800/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-extrabold text-center mb-12">Powerful Features for Your Financial Journey</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {features.map((feature) => (
-                <motion.div 
-                  key={feature.name} 
-                  className="bg-gray-700/50 backdrop-blur-sm p-6 rounded-lg shadow-lg border border-gray-600/50"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <feature.icon className="h-12 w-12 text-blue-400 mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">{feature.name}</h3>
-                  <p className="text-gray-300">{feature.description}</p>
-                </motion.div>
-              ))}
+        <section id="features" className="container py-24 space-y-16">
+          {features.map((feature, i) => (
+            <motion.div
+              key={feature.title}
+              className="grid md:grid-cols-2 gap-8 items-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className={`space-y-4 ${i % 2 === 1 ? 'md:order-2' : ''}`}>
+                <div className="bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
+                  <feature.icon className="w-5 h-5 text-primary" />
+                </div>
+                <h2 className="text-3xl font-bold">{feature.title}</h2>
+                <p className="text-lg text-muted-foreground">{feature.description}</p>
+                <div className="flex gap-4">
+                  <Button variant="outline" size="sm">
+                    Learn more
+                    <LineChart className="ml-2 w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className={`${i % 2 === 1 ? 'md:order-1' : ''}`}>
+                <div className="relative aspect-video overflow-hidden rounded-xl">
+                  <img
+                    src={feature.image}
+                    alt={feature.title}
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </section>
+
+        {/* Stats Section */}
+        <section className="container py-24">
+          <motion.div
+            className="grid md:grid-cols-3 gap-8 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <div className="space-y-2">
+              <h3 className="text-4xl font-bold">100K+</h3>
+              <p className="text-muted-foreground">Active Users</p>
             </div>
-          </div>
+            <div className="space-y-2">
+              <h3 className="text-4xl font-bold">$2M+</h3>
+              <p className="text-muted-foreground">Expenses Tracked</p>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-4xl font-bold">98%</h3>
+              <p className="text-muted-foreground">Customer Satisfaction</p>
+            </div>
+          </motion.div>
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-extrabold text-center mb-12">Frequently Asked Questions</h2>
-            <div className="space-y-8">
-              {faqs.map((faq, index) => (
-                <motion.div 
-                  key={index}
-                  className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700/50"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <h3 className="text-xl font-semibold mb-2">{faq.question}</h3>
-                  <p className="text-gray-300">{faq.answer}</p>
-                </motion.div>
-              ))}
+        <section id="faq" className="container py-24">
+          <motion.div
+            className="max-w-3xl mx-auto space-y-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
+              <p className="text-muted-foreground">
+                Everything you need to know about ExpenseTracker.
+              </p>
             </div>
-          </div>
-        </section>
 
-        {/* Testimonials Section */}
-        <section className="py-20 bg-gray-800/50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-extrabold text-center mb-12">What Our Users Say</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {testimonials.map((testimonial, index) => (
-                <motion.div 
-                  key={index} 
-                  className="bg-gray-700/50 backdrop-blur-sm p-6 rounded-lg shadow-lg border border-gray-600/50"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                >
-                  <div className="flex items-center mb-4">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img 
-                      src={testimonial.image} 
-                      alt={testimonial.name} 
-                      className="w-12 h-12 rounded-full mr-4"
-                    />
-                    <div>
-                      <h3 className="font-semibold">{testimonial.name}</h3>
-                      <p className="text-gray-400">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <p className="text-gray-300 italic">&quot;{testimonial.quote}&quot;</p>
-                </motion.div>
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq, i) => (
+                <AccordionItem key={i} value={`item-${i}`}>
+                  <AccordionTrigger>{faq.question}</AccordionTrigger>
+                  <AccordionContent>{faq.answer}</AccordionContent>
+                </AccordionItem>
               ))}
-            </div>
-          </div>
+            </Accordion>
+          </motion.div>
         </section>
 
         {/* CTA Section */}
-        <section className="py-20">
-          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-extrabold mb-6">Ready to Take Control of Your Finances?</h2>
-            <p className="text-xl text-gray-300 mb-10">Start your 7-day free trial today. No credit card required.</p>
-            <Link 
-              href="/auth/signup" 
-              className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 md:text-lg"
-            >
-              Begin Your Financial Journey
-            </Link>
-          </div>
+        <section className="container py-24">
+          <motion.div
+            className="max-w-3xl mx-auto text-center space-y-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold">Ready to Get Started?</h2>
+            <p className="text-muted-foreground">
+              Join thousands of users who are already managing their finances better with ExpenseTracker.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/auth/signup">
+                <Button size="lg">Start Free Trial</Button>
+              </Link>
+              <Link href="#features">
+                <Button size="lg" variant="outline">Learn More</Button>
+              </Link>
+            </div>
+          </motion.div>
         </section>
       </main>
 
-      <footer className="bg-gray-800/50 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} ExpenseTracker. All rights reserved.</p>
+      <footer className="border-t">
+        <div className="container py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="space-y-4">
+              <h4 className="font-semibold">Product</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Features</Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Pricing</Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">FAQ</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h4 className="font-semibold">Company</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">About</Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Blog</Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Careers</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h4 className="font-semibold">Resources</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Documentation</Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Help Center</Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Contact</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h4 className="font-semibold">Legal</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Privacy</Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Terms</Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary">Security</Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t mt-8 pt-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} ExpenseTracker. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </div>
-  );
+  )
 }
